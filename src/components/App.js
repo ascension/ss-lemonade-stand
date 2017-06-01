@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { browserHistory, Router } from 'react-router';
 import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 
-class App extends React.Component {
-  static propTypes = {
-    store: PropTypes.object.isRequired,
-    routes: PropTypes.object.isRequired
-  };
+const propTypes = {
+  store: PropTypes.object.isRequired,
+  routes: PropTypes.object.isRequired
+};
 
+class App extends Component {
   shouldComponentUpdate() {
     return false;
   }
@@ -23,5 +23,7 @@ class App extends React.Component {
     );
   }
 }
+
+App.propTypes = propTypes;
 
 export default App;
