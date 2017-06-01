@@ -1,12 +1,15 @@
 import { connect } from 'react-redux';
 import DashboardPage from '../components/DashboardPage';
+import { createCustomerBitcoinAddress } from '../modules/bitcoinAddresses';
 
-function mapDispatchToProps(dispatch) {
-
-}
+const mapDispatchToProps = {
+  createCustomerBitcoinAddress
+};
 
 function mapStateToProps(state, ownProps) {
-
+  return {
+    addresses: state.bitcoinAddresses.addresses
+  };
 }
 
 // TODO - Ensure that we subscribe to all addresses
