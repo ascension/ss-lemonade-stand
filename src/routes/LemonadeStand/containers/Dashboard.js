@@ -1,15 +1,16 @@
 import { connect } from 'react-redux';
 import DashboardPage from '../components/DashboardPage';
 import { createCustomerBitcoinAddress } from '../modules/bitcoinAddresses';
+import { getBtcPrice } from '../../../store/coinPrices';
 
 const mapDispatchToProps = {
   createCustomerBitcoinAddress
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     addresses: state.bitcoinAddresses.addresses,
-    btcPrice: parseFloat(state.bitcoinPrice.btcPrice)
+    btcPrice: getBtcPrice(state)
   };
 }
 

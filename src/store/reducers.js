@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import locationReducer from './location';
-import bitcoinPriceReducer from './bitcoinPrice';
+import coinPricesReducer from './coinPrices';
 
 export const makeRootReducer = asyncReducers => {
   return combineReducers({
     location: locationReducer,
-    bitcoinPrice: bitcoinPriceReducer,
+    coinPrices: coinPricesReducer,
     ...asyncReducers
   });
 };
