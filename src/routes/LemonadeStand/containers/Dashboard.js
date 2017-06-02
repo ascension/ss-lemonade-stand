@@ -8,7 +8,8 @@ const mapDispatchToProps = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    addresses: state.bitcoinAddresses.addresses
+    addresses: state.bitcoinAddresses.addresses,
+    btcPrice: parseFloat(state.bitcoinPrice.btcPrice)
   };
 }
 

@@ -6,6 +6,8 @@ import { bindClassMethods } from 'util/commonUtil';
 import { Container, Row } from 'components/Layout';
 import styled from 'styled-components';
 import { isValidBitcoinAddress } from 'util/bitcoinUtil';
+import AnimatedNumber from 'react-animated-number';
+import numeral from 'numeral';
 
 const propTypes = {
   addresses: PropTypes.object,
@@ -141,8 +143,18 @@ class DashboardPage extends Component {
             <Row>
               <div className="col-md-6">
                 <Panel>
-                  <PanelHeading>Pending</PanelHeading>
-                  <PanelBody><Stats>Testing</Stats></PanelBody>
+                  <PanelHeading>BTC Price</PanelHeading>
+                  <PanelBody>
+                    <Stats>
+                      <AnimatedNumber
+                        duration={500}
+                        style={{ color: 'rgba(108, 168,  46, 1.0)'}}
+                        value={this.props.btcPrice}
+                        stepPrecision={2}
+                        formatValue={num => numeral(num).format('$0,0.00')}
+                      />
+                    </Stats>
+                  </PanelBody>
                 </Panel>
               </div>
               <div className="col-md-6">
@@ -175,7 +187,7 @@ class DashboardPage extends Component {
               </div>
               <div style={{ marginBottom: '30px' }}>
                 <Input
-                  style={{ marginBottom: '30px'}}
+                  style={{ marginBottom: '30px' }}
                   placeholder={this.state.generateNewAddress ? '' : 'Bitcoin Address'}
                   name="bitcoinAddress"
                   value={!this.state.generateNewAddress ? this.state.bitcoinAddress : ''}
