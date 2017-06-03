@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import { Input, HelpBlock } from '../../../components/Input';
 import { Button } from '../../../components/Buttons';
 import { bindClassMethods } from 'util/commonUtil';
 import { Container, Row } from 'components/Layout';
 import styled from 'styled-components';
-import { isValidBitcoinAddress } from 'util/bitcoinUtil';
-import AnimatedNumber from 'react-animated-number';
+import { isValidBitcoinAddress, calculateTransactionValue, convertSatoshisToBtc } from 'util/bitcoinUtil';
 import numeral from 'numeral';
-import { convertSatoshisToFormattedBtcString } from 'util/textFormattingUtil'
+import { convertSatoshisToFormattedBtcString, formatToUsdString } from 'util/textFormattingUtil';
+import StatPanel from '../components/StatPanel';
+import AnimatedNumber from 'react-animated-number';
 
 const propTypes = {
   addresses: PropTypes.object,
@@ -27,7 +27,7 @@ const H3 = styled.h3`
     width: 100%;
 `;
 
-const BitcoinAddressTable = styled.table`
+const Table = styled.table`
   width: 100%;
   color: #999;
   & tr {
@@ -37,6 +37,11 @@ const BitcoinAddressTable = styled.table`
   & td {
     text-align: left;
   }
+`;
+
+const TH = styled.th`
+  color: #999;
+  whiteSpace: nowrap;
 `;
 
 const Panel = styled.div`
@@ -132,43 +137,55 @@ class DashboardPage extends Component {
     });
   }
 
-  renderBitcoinAddressRow({ publicAddress, memo, id, transactions }) {
-    const hasTransactions = transactions.length > 0;
-    const lastTransaction = transactions[transactions.length - 1];
+  renderBitcoinAddressTransactions(publicAddress, memo, transactions) {
+    const { btcPrice } = this.props;
 
-    return (
-      <tr key={publicAddress}>
+    return transactions.reverse().map(transaction => (
+      <tr key={transaction.txnId}>
         <td style={{ paddingRight: '30px' }}>
           <a href={`https://blockchain.info/address/${publicAddress}`} target="_blank">{publicAddress}</a>
         </td>
         <td>{memo}</td>
-        {hasTransactions &&
-          <td>
-            {convertSatoshisToFormattedBtcString(lastTransaction.amount)} BTC
-          </td>}
-        {hasTransactions &&
-          <td>
-            <a target="_blank" href={`https://blockchain.info/tx/${lastTransaction.txnId}`}>
-              View
-            </a>
-          </td>}
+        <td>
+          {convertSatoshisToFormattedBtcString(transaction.amount)} BTC
+          (~{formatToUsdString(calculateTransactionValue(convertSatoshisToBtc(transaction.amount), btcPrice))})
+        </td>
+        <td>
+          <a target="_blank" href={`https://blockchain.info/tx/${transaction.txnId}`}>
+            View
+          </a>
+        </td>
       </tr>
-    );
+    ));
+  }
+
+  renderBitcoinAddressRow({ publicAddress, memo, transactions }) {
+    const hasTransactions = transactions.length > 0;
+    const lastTransaction = transactions[transactions.length - 1];
+
+    return !hasTransactions
+      ? <tr key={publicAddress}>
+          <td style={{ paddingRight: '30px' }}>
+            <a href={`https://blockchain.info/address/${publicAddress}`} target="_blank">{publicAddress}</a>
+          </td>
+          <td>{memo}</td>
+        </tr>
+      : this.renderBitcoinAddressTransactions(publicAddress, memo, transactions);
   }
 
   renderAddressTable(addresses, showTxnDetails) {
     return (
-      <BitcoinAddressTable>
+      <Table>
         <tbody>
           <tr style={{ borderBottom: '1px solid #ddd' }}>
-            <th style={{ color: '#999', whiteSpace: 'nowrap', width: '1%' }}>Bitcoin Address</th>
-            <th style={{ color: '#999', whiteSpace: 'nowrap' }}>Memo</th>
+            <TH style={{ color: '#999', whiteSpace: 'nowrap', width: '1%' }}>Bitcoin Address</TH>
+            <TH style={{ color: '#999', whiteSpace: 'nowrap' }}>Memo</TH>
             {showTxnDetails && <th style={{ color: '#999', whiteSpace: 'nowrap' }}>Amount</th>}
             {showTxnDetails && <th style={{ color: '#999', whiteSpace: 'nowrap' }}>Transaction Details</th>}
           </tr>
-          {addresses.reverse().map(address => this.renderBitcoinAddressRow(address))}
+          {addresses.map(address => this.renderBitcoinAddressRow(address))}
         </tbody>
-      </BitcoinAddressTable>
+      </Table>
     );
   }
 
@@ -181,43 +198,28 @@ class DashboardPage extends Component {
           <div className="col-md-6">
             <Row>
               <div className="col-md-6">
-                <Panel>
-                  <PanelHeading>BTC Price</PanelHeading>
-                  <PanelBody>
-                    <Stats>
-                      {this.props.btcPrice === 0
-                        ? 'Loading'
-                        : <AnimatedNumber
-                            duration={500}
-                            style={{ color: 'rgba(108, 168,  46, 1.0)' }}
-                            value={this.props.btcPrice}
-                            stepPrecision={2}
-                            formatValue={num => numeral(num).format('$0,0.00')}
-                          />}
-
-                    </Stats>
-                  </PanelBody>
-                </Panel>
+                <StatPanel title="BTC Price">
+                  {this.props.btcPrice === 0
+                    ? 'Loading'
+                    : <AnimatedNumber
+                        duration={500}
+                        style={{ color: 'rgba(108, 168,  46, 1.0)' }}
+                        value={this.props.btcPrice}
+                        stepPrecision={2}
+                        formatValue={num => numeral(num).format('$0,0.00')}
+                      />}
+                </StatPanel>
               </div>
               <div className="col-md-6">
-                <Panel>
-                  <PanelHeading># of Addresses</PanelHeading>
-                  <PanelBody><Stats>{addressCount}</Stats></PanelBody>
-                </Panel>
+                <StatPanel title="# of Addresses" content={addressCount} />
               </div>
             </Row>
             <Row>
               <div className="col-md-6">
-                <Panel>
-                  <PanelHeading># of Pending</PanelHeading>
-                  <PanelBody><Stats>{addressesWithoutTransactions.length}</Stats></PanelBody>
-                </Panel>
+                <StatPanel title="# of Pending" content={addressesWithoutTransactions.length} />
               </div>
               <div className="col-md-6">
-                <Panel>
-                  <PanelHeading># of Complete</PanelHeading>
-                  <PanelBody><Stats>{addressesWithTransactions.length}</Stats></PanelBody>
-                </Panel>
+                <StatPanel title="# of Complete" content={addressesWithTransactions.length} />
               </div>
             </Row>
           </div>
