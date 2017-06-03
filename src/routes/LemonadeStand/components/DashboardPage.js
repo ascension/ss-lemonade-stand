@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { isValidBitcoinAddress } from 'util/bitcoinUtil';
 import AnimatedNumber from 'react-animated-number';
 import numeral from 'numeral';
+import { convertSatoshisToFormattedBtcString } from 'util/textFormattingUtil'
 
 const propTypes = {
   addresses: PropTypes.object,
@@ -131,24 +132,39 @@ class DashboardPage extends Component {
     });
   }
 
-  renderBitcoinAddressRow({ publicAddress, memo, id }) {
+  renderBitcoinAddressRow({ publicAddress, memo, id, transactions }) {
+    const hasTransactions = transactions.length > 0;
+    const lastTransaction = transactions[transactions.length - 1];
+
     return (
-      <tr key={id}>
+      <tr key={publicAddress}>
         <td style={{ paddingRight: '30px' }}>
           <a href={`https://blockchain.info/address/${publicAddress}`} target="_blank">{publicAddress}</a>
         </td>
         <td>{memo}</td>
+        {hasTransactions &&
+          <td>
+            {convertSatoshisToFormattedBtcString(lastTransaction.amount)} BTC
+          </td>}
+        {hasTransactions &&
+          <td>
+            <a target="_blank" href={`https://blockchain.info/tx/${lastTransaction.txnId}`}>
+              View
+            </a>
+          </td>}
       </tr>
     );
   }
 
-  renderAddressTable(addresses) {
+  renderAddressTable(addresses, showTxnDetails) {
     return (
       <BitcoinAddressTable>
         <tbody>
           <tr style={{ borderBottom: '1px solid #ddd' }}>
             <th style={{ color: '#999', whiteSpace: 'nowrap', width: '1%' }}>Bitcoin Address</th>
             <th style={{ color: '#999', whiteSpace: 'nowrap' }}>Memo</th>
+            {showTxnDetails && <th style={{ color: '#999', whiteSpace: 'nowrap' }}>Amount</th>}
+            {showTxnDetails && <th style={{ color: '#999', whiteSpace: 'nowrap' }}>Transaction Details</th>}
           </tr>
           {addresses.reverse().map(address => this.renderBitcoinAddressRow(address))}
         </tbody>
@@ -251,7 +267,7 @@ class DashboardPage extends Component {
           <H3>Completed Payments</H3>
           {addressesWithTransactions &&
             addressesWithTransactions.length > 0 &&
-            this.renderAddressTable(addressesWithTransactions)}
+            this.renderAddressTable(addressesWithTransactions, true)}
         </Row>
       </Container>
     );
