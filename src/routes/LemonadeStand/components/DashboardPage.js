@@ -82,9 +82,10 @@ const CheckboxLabel = styled.label`
 class DashboardPage extends Component {
   constructor(props) {
     super(props);
+    const { address = '', memo = ''} = props;
     this.state = {
-      memo: '',
-      bitcoinAddress: '',
+      memo,
+      bitcoinAddress: address,
       generateNewAddress: false,
       formErrors: {}
     };

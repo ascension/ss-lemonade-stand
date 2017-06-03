@@ -1,4 +1,4 @@
-# Lemonade Stand [demo](http://lemonade-stand.bunce.io/dashboard)
+# Lemonade Stand [demo](http://localhost:3000/dashboard?address=3CD1QW6fjgTwKq3Pj97nty28WZAVkziNom&memo=Popular%20Address)
 
 ## Table of Contents
 1. [Requirements](#requirements)

@@ -13,13 +13,16 @@ const mapDispatchToProps = {
   createCustomerBitcoinAddress
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
+  const { location: { query: { address, memo } } } = props;
   return {
     addresses: getBitcoinAddresses(state),
     btcPrice: getBtcPrice(state),
     addressCount: getCountOfBitcoinAddresses(state),
     addressesWithTransactions: getAddressesWithTransaction(state),
     addressesWithoutTransactions: getAddressesWithoutTransaction(state),
+    address,
+    memo
   };
 }
 
