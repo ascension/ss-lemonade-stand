@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Input, HelpBlock } from '../../../components/Input';
 import { Button } from '../../../components/Buttons';
@@ -131,7 +132,7 @@ class DashboardPage extends Component {
 
   renderBitcoinAddressRow({ publicAddress, memo, id }) {
     return (
-      <tr>
+      <tr key={id}>
         <td style={{ paddingRight: '30px' }}><Link to={`/address/${publicAddress}`}>{publicAddress}</Link></td>
         <td>{memo}</td>
       </tr>
