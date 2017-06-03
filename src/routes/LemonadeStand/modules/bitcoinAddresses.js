@@ -60,7 +60,7 @@ const ACTION_HANDLERS = {
 
     const address = addresses[publicAddress];
     if (address) {
-      const mergedTransactions = [...address.transactions, { txnId, amount }];
+      const mergedTransactions = [{ txnId, amount }, ...address.transactions];
       return {
         ...state,
         addresses: { ...addresses, [publicAddress]: { ...address, transactions: mergedTransactions } }

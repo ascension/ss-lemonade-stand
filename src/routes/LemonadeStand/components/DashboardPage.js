@@ -140,7 +140,7 @@ class DashboardPage extends Component {
   renderBitcoinAddressTransactions(publicAddress, memo, transactions) {
     const { btcPrice } = this.props;
 
-    return transactions.reverse().map(transaction => (
+    return transactions.map(transaction => (
       <tr key={transaction.txnId}>
         <td style={{ paddingRight: '30px' }}>
           <a href={`https://blockchain.info/address/${publicAddress}`} target="_blank">{publicAddress}</a>
