@@ -1,9 +1,5 @@
-import React from 'react'
-import { NavBar } from './styled';
+import React from 'react';
 
-export const HomeView = () => (
-  <div>
-  </div>
-)
+export const HomeView = () => <div />;
 
-export default HomeView
+export default HomeView;
