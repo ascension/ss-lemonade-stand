@@ -1,6 +1,12 @@
 import { connect } from 'react-redux';
 import DashboardPage from '../components/DashboardPage';
-import { createCustomerBitcoinAddress } from '../modules/bitcoinAddresses';
+import {
+  createCustomerBitcoinAddress,
+  getBitcoinAddresses,
+  getCountOfBitcoinAddresses,
+  getAddressesWithoutTransaction,
+  getAddressesWithTransaction
+} from '../modules/bitcoinAddresses';
 import { getBtcPrice } from '../../../store/coinPrices';
 
 const mapDispatchToProps = {
@@ -9,8 +15,11 @@ const mapDispatchToProps = {
 
 function mapStateToProps(state) {
   return {
-    addresses: state.bitcoinAddresses.addresses,
-    btcPrice: getBtcPrice(state)
+    addresses: getBitcoinAddresses(state),
+    btcPrice: getBtcPrice(state),
+    addressCount: getCountOfBitcoinAddresses(state),
+    addressesWithTransactions: getAddressesWithTransaction(state),
+    addressesWithoutTransactions: getAddressesWithoutTransaction(state),
   };
 }
 

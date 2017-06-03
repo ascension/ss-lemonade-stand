@@ -11,7 +11,8 @@ import numeral from 'numeral';
 
 const propTypes = {
   addresses: PropTypes.object,
-  createCustomerBitcoinAddress: PropTypes.func.isRequired
+  createCustomerBitcoinAddress: PropTypes.func.isRequired,
+  btcPrice: PropTypes.number.isRequired
 };
 
 const H3 = styled.h3`
@@ -22,6 +23,18 @@ const H3 = styled.h3`
     margin-top: 0;
     color: #888;
     width: 100%;
+`;
+
+const BitcoinAddressTable = styled.table`
+  width: 100%;
+  color: #999;
+  & tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  & td {
+    text-align: left;
+  }
 `;
 
 const Panel = styled.div`
@@ -116,25 +129,31 @@ class DashboardPage extends Component {
     });
   }
 
+  renderBitcoinAddressRow({ publicAddress, memo, id }) {
+    return (
+      <tr>
+        <td style={{ paddingRight: '30px' }}><Link to={`/address/${publicAddress}`}>{publicAddress}</Link></td>
+        <td>{memo}</td>
+      </tr>
+    );
+  }
+
   renderAddressTable(addresses) {
     return (
-      <table style={{ width: '100%' }}>
-        <tr style={{ borderBottom: '1px solid #ddd' }}>
-          <th style={{ color: '#999' }}>Bitcoin Address</th>
-          <th style={{ borderLeft: '1px solid #ddd', color: '#999' }}>Customer Name</th>
-        </tr>
-
-        {Object.values(addresses)
-          .reverse()
-          .map(({ publicAddress, memo }) => (
-            <tr><td><Link to={`/address/${publicAddress}`}>{publicAddress}</Link></td><td>{memo}</td></tr>
-          ))}
-      </table>
+      <BitcoinAddressTable>
+        <tbody>
+          <tr style={{ borderBottom: '1px solid #ddd' }}>
+            <th style={{ color: '#999', whiteSpace: 'nowrap', width: '1%' }}>Bitcoin Address</th>
+            <th style={{ color: '#999', whiteSpace: 'nowrap' }}>Memo</th>
+          </tr>
+          {addresses.reverse().map(address => this.renderBitcoinAddressRow(address))}
+        </tbody>
+      </BitcoinAddressTable>
     );
   }
 
   render() {
-    const { addresses } = this.props;
+    const { addressCount, addressesWithTransactions, addressesWithoutTransactions } = this.props;
 
     return (
       <Container>
@@ -146,41 +165,45 @@ class DashboardPage extends Component {
                   <PanelHeading>BTC Price</PanelHeading>
                   <PanelBody>
                     <Stats>
-                      <AnimatedNumber
-                        duration={500}
-                        style={{ color: 'rgba(108, 168,  46, 1.0)'}}
-                        value={this.props.btcPrice}
-                        stepPrecision={2}
-                        formatValue={num => numeral(num).format('$0,0.00')}
-                      />
+                      {this.props.btcPrice === 0
+                        ? 'Loading'
+                        : <AnimatedNumber
+                            duration={500}
+                            style={{ color: 'rgba(108, 168,  46, 1.0)' }}
+                            value={this.props.btcPrice}
+                            stepPrecision={2}
+                            formatValue={num => numeral(num).format('$0,0.00')}
+                          />}
+
                     </Stats>
                   </PanelBody>
                 </Panel>
               </div>
               <div className="col-md-6">
                 <Panel>
-                  <PanelHeading>Pending</PanelHeading>
-                  <PanelBody><Stats>Testing</Stats></PanelBody>
+                  <PanelHeading># of Addresses</PanelHeading>
+                  <PanelBody><Stats>{addressCount}</Stats></PanelBody>
                 </Panel>
               </div>
             </Row>
             <Row>
               <div className="col-md-6">
                 <Panel>
-                  <PanelHeading>Pending</PanelHeading>
-                  <PanelBody><Stats>Testing</Stats></PanelBody>
+                  <PanelHeading># of Pending</PanelHeading>
+                  <PanelBody><Stats>{addressesWithoutTransactions.length}</Stats></PanelBody>
                 </Panel>
               </div>
               <div className="col-md-6">
                 <Panel>
-                  <PanelHeading>Pending</PanelHeading>
-                  <PanelBody><Stats>Testing</Stats></PanelBody>
+                  <PanelHeading># of Complete</PanelHeading>
+                  <PanelBody><Stats>{addressesWithTransactions.length}</Stats></PanelBody>
                 </Panel>
               </div>
             </Row>
           </div>
           <div className="col-md-6">
             <form className="form">
+              <h5 style={{ marginBottom: '20px' }}>Enter bitcoin address to be notified of payments.</h5>
               <div style={{ marginBottom: '30px' }}>
                 <Input placeholder="Memo" name="memo" value={this.state.memo} onChange={this.handleChange} />
                 {this.state.formErrors.memo && <HelpBlock hasError={true}>Memo is required.</HelpBlock>}
@@ -217,10 +240,15 @@ class DashboardPage extends Component {
         </Row>
         <Row style={{ padding: '50px 0' }}>
           <H3>Pending Payments</H3>
-          {addresses && Object.keys(addresses).length > 0 && this.renderAddressTable(addresses)}
+          {addressesWithoutTransactions &&
+            addressesWithoutTransactions.length > 0 &&
+            this.renderAddressTable(addressesWithoutTransactions)}
         </Row>
         <Row>
           <H3>Completed Payments</H3>
+          {addressesWithTransactions &&
+            addressesWithTransactions.length > 0 &&
+            this.renderAddressTable(addressesWithTransactions)}
         </Row>
       </Container>
     );
