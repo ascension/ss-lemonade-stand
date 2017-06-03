@@ -1,5 +1,5 @@
 import cuid from 'cuid';
-import { ADD_BTC_TXN } from '../routes/LemonadeStand/modules/bitcoinTxns';
+import { ADD_BTC_TXN } from 'routes/LemonadeStand/modules/bitcoinTxns';
 import { convertSatoshisToFormattedBtcString, formatToUsdString } from 'util/textFormattingUtil';
 import { calculateTransactionValue, convertSatoshisToBtc } from 'util/bitcoinUtil';
 

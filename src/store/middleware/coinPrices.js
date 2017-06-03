@@ -7,12 +7,17 @@ import { createSocketIoMiddleware } from 'util/middlewareUtil';
 export const UPDATE_COIN_PRICE = 'UPDATE_COIN_PRICE';
 
 // ------------------------------------
-// ACTIONS
+// Selectors
 // ------------------------------------
-export const updateCoinPrice = ({ message, coin }) => {
+export const getBtcPrice = state => parseFloat(state.coinPrices.BTC.price) || 0;
+
+// ------------------------------------
+// Actions
+// ------------------------------------
+export const updateCoinPrice = data => {
   return {
     type: UPDATE_COIN_PRICE,
-    payload: { ...message, coin }
+    payload: data
   };
 };
 
@@ -21,19 +26,14 @@ export const updateBtcPrice = ({ message: { btcPrice, ...restOfMessage } }) => {
 };
 
 // ------------------------------------
-// Selectors
-// ------------------------------------
-export const getBtcPrice = state => parseFloat(state.coinPrices.BTC.price) || 0;
-
-// ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = { BTC: { price: 0 } };
 export default function coinPricesReducer(state = initialState, action) {
   switch (action.type) {
     case UPDATE_COIN_PRICE:
-      const { payload: { message, coin } } = action;
-      return { ...state, [coin]: message };
+      const { payload: { coin, ...coinInfo } } = action;
+      return { ...state, [coin]: coinInfo };
     default:
       return state;
   }

@@ -7,7 +7,7 @@ import {
   getAddressesWithoutTransaction,
   getAddressesWithTransaction
 } from '../modules/bitcoinAddresses';
-import { getBtcPrice } from '../../../store/coinPrices';
+import { getBtcPrice } from 'store/middleware/coinPrices';
 
 const mapDispatchToProps = {
   createCustomerBitcoinAddress

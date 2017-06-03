@@ -2,9 +2,9 @@ import { applyMiddleware, compose, createStore as createReduxStore } from 'redux
 import thunk from 'redux-thunk';
 import { browserHistory } from 'react-router';
 import makeRootReducer from './reducers';
-import { updateLocation } from './location';
-import { coinCapSocketMiddleWare } from './coinPrices';
-import { alertMiddleWare } from './alerts';
+import { updateLocation } from './middleware/location';
+import { coinCapSocketMiddleWare } from './middleware/coinPrices';
+import { alertMiddleWare } from './middleware/alerts';
 import { initWebsocket } from '../routes/LemonadeStand/services/Blockchain';
 const createStore = (initialState = {}) => {
   // ======================================================

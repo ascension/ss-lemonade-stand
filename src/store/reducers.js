@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import locationReducer from './location';
-import coinPricesReducer from './coinPrices';
-import alertsReducer from './alerts';
+import locationReducer from './middleware/location';
+import coinPricesReducer from './middleware/coinPrices';
+import alertsReducer from './middleware/alerts';
 
 export const makeRootReducer = asyncReducers => {
   return combineReducers({
