@@ -5,7 +5,7 @@ import ClearIcon from 'react-icons/lib/md/clear';
 
 const propTypes = {
   alerts: PropTypes.object,
-  deleteAlert: PropTypes.function.isRequired
+  deleteAlert: PropTypes.func.isRequired
 };
 
 const AlertBox = props => {
