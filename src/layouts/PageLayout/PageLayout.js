@@ -8,6 +8,7 @@ import styled from 'styled-components';
 
 const Viewport = styled.div`
   padding-top: 4rem;
+  padding-bottom: 4rem;
 `;
 
 export const PageLayout = ({ children }) => (
