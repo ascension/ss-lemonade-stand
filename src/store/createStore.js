@@ -3,31 +3,14 @@ import thunk from 'redux-thunk';
 import { browserHistory } from 'react-router';
 import makeRootReducer from './reducers';
 import { updateLocation } from './location';
-import { coinCapSocketMiddleWare } from './bitcoinPrice';
-
+import { coinCapSocketMiddleWare } from './coinPrices';
+import { alertMiddleWare } from './alerts';
+import { initWebsocket } from '../routes/LemonadeStand/services/Blockchain';
 const createStore = (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const blockchainSocket = new WebSocket('wss://ws.blockchain.info/inv');
-  blockchainSocket.onopen = event => {
-    // blockchainSocket.send(JSON.stringify({ "op": "unconfirmed_sub" }));
-    // Listen for messages
-    blockchainSocket.onmessage = function(event) {
-      console.log('Client received a message', event);
-    };
-
-    // Listen for socket closes
-    blockchainSocket.onclose = function(event) {
-      console.log('Client notified socket has closed', event);
-    };
-  };
-
-  // socket.connect('wss://ws.blockchain.info/inv', { path: '/'});
-  // blockchainSocket.on('connect_error', function (error) {
-  //   debugger;
-  // });
-  const middleware = [thunk, coinCapSocketMiddleWare];
+  const middleware = [thunk, coinCapSocketMiddleWare, alertMiddleWare];
 
   // ======================================================
   // Store Enhancers
@@ -54,6 +37,7 @@ const createStore = (initialState = {}) => {
   // Listen to browser history events and dispatch action
   // Invoke to un-subscribe
   store.unsubscribeHistory = browserHistory.listen(updateLocation(store.dispatch));
+  initWebsocket(store);
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {
