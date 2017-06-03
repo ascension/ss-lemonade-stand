@@ -211,7 +211,6 @@ class DashboardPage extends Component {
               </div>
               <div style={{ marginBottom: '30px' }}>
                 <Input
-                  style={{ marginBottom: '30px' }}
                   placeholder={this.state.generateNewAddress ? '' : 'Bitcoin Address'}
                   name="bitcoinAddress"
                   value={!this.state.generateNewAddress ? this.state.bitcoinAddress : ''}
