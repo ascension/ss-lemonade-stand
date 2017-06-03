@@ -14,7 +14,7 @@ export const PageLayout = ({ children }) => (
         <h4 style={{ paddingTop: '1em' }}>Lemonade Stand</h4>
         <ul>
           <li><Link to='dashboard'>Dashboard</Link></li>
-          <li><Link to='transaction'>View Transactions</Link></li>
+          {/*<li><Link to='transaction'>View Transactions</Link></li>*/}
         </ul>
       </Container>
     </NavBar>
