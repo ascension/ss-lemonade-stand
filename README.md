@@ -1,4 +1,4 @@
-# Lemonade Stand
+# Lemonade Stand [demo](http://lemonade-stand.bunce.io/dashboard)
 
 ## Table of Contents
 1. [Requirements](#requirements)
