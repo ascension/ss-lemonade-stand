@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import ClearIcon from 'react-icons/lib/md/clear';
-import { deleteAlert } from 'store/alerts';
+import { deleteAlert } from 'store/middleware/alerts';
 
 const AlertBox = styled.div`
   position: absolute;
