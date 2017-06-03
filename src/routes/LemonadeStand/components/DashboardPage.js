@@ -82,7 +82,7 @@ const CheckboxLabel = styled.label`
 class DashboardPage extends Component {
   constructor(props) {
     super(props);
-    const { address = '', memo = ''} = props;
+    const { address = '', memo = '' } = props;
     this.state = {
       memo,
       bitcoinAddress: address,
@@ -134,7 +134,9 @@ class DashboardPage extends Component {
   renderBitcoinAddressRow({ publicAddress, memo, id }) {
     return (
       <tr key={id}>
-        <td style={{ paddingRight: '30px' }}><Link to={`/address/${publicAddress}`}>{publicAddress}</Link></td>
+        <td style={{ paddingRight: '30px' }}>
+          <a href={`https://blockchain.info/address/${publicAddress}`} target="_blank">{publicAddress}</a>
+        </td>
         <td>{memo}</td>
       </tr>
     );
