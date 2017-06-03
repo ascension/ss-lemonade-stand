@@ -18,7 +18,7 @@ export const PageLayout = ({ children }) => (
         <h4>Lemonade Stand</h4>
         <ul>
           <li><Link to='dashboard'>Dashboard</Link></li>
-          <li><Link to='transaction'>View Transactions</Link></li>
+          {/*<li><Link to='transaction'>View Transactions</Link></li>*/}
         </ul>
       </Container>
     </NavBar>
