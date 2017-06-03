@@ -45,14 +45,13 @@ export const initWebsocket = ({ dispatch, getState }) => {
 
         if (message.op === 'utx') {
           const { bitcoinAddresses: { addresses } } = getState();
-
-          const { inputs, hash: txnId } = txnInfo;
-          const addressFound = inputs.find(txn => {
-            return addresses[txn.prev_out.addr];
+          const { out, hash: txnId } = txnInfo;
+          const addressFound = out.find(txn => {
+            return addresses[txn.addr];
           });
 
           if (addressFound) {
-            const { prev_out: { addr, value } } = addressFound;
+            const { addr, value } = addressFound;
             const txnDetails = { publicAddress: addr, amount: value, txnId, rawInfo: txnInfo };
             dispatch(addBtcTxn(txnDetails));
           }
