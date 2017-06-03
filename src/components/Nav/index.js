@@ -8,6 +8,7 @@ export const NavBar = styled.nav`
   & h4 {
     float: left;
     display: inline-block;
+    padding-top: 1em;
   }
   
   & ul {
