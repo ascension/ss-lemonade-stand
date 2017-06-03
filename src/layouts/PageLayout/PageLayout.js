@@ -1,18 +1,19 @@
 import React from 'react';
-import { IndexLink, Link } from 'react-router';
+import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import './PageLayout.scss';
 import { NavBar } from '../../components/Nav';
 import { AppContainer, Container } from '../../components/Layout';
+import Alerts from '../../containers/Alerts';
 
 export const PageLayout = ({ children }) => (
   <AppContainer>
+    <Alerts/>
     <NavBar>
       <Container>
         <h4 style={{ paddingTop: '1em' }}>Lemonade Stand</h4>
         <ul>
           <li><Link to='dashboard'>Dashboard</Link></li>
-          <li><Link to='addresses'>Add Address</Link></li>
           <li><Link to='transaction'>View Transactions</Link></li>
         </ul>
       </Container>
