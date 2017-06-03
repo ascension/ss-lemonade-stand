@@ -1,5 +1,12 @@
 import bitcoin from 'bitcoinjs-lib';
 
+const satoshisPerBtc = 100000000;
+
+export const convertSatoshisToBtc = amountSatoshis => amountSatoshis / satoshisPerBtc;
+
+export const calculateTransactionValue = (amount, price) => amount * price;
+
+
 export const generateBitcoinKeyPair = () => {
   return bitcoin.ECPair.makeRandom();
 };
