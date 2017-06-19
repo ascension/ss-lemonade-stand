@@ -2,11 +2,23 @@ import { createSelector } from 'reselect';
 import { generateBitcoinKeyPair } from 'util/bitcoinUtil';
 import { ADD_BTC_TXN } from './bitcoinTxns';
 import { subscribeToAddress } from '../services/Blockchain';
+import { getTransactionsForAddress } from '../services/api/blockchainApiService';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const CREATE_BITCOIN_ADDRESS = 'CREATE_BITCOIN_ADDRESS';
+
+export const FETCH_BITCOIN_ADDRESS_DETAILS_BEGIN = 'FETCH_BITCOIN_ADDRESS_DETAILS_BEGIN';
+export const FETCH_BITCOIN_ADDRESS_DETAILS_SUCCESS = 'FETCH_BITCOIN_ADDRESS_DETAILS_SUCCESS';
+export const FETCH_BITCOIN_ADDRESS_DETAILS_FAILURE = 'FETCH_BITCOIN_ADDRESS_DETAILS_FAILURE';
+
+export const fetchBitcoinAddressDetailsBegin = bitcoinAddress => ({
+  type: FETCH_BITCOIN_ADDRESS_DETAILS_BEGIN,
+  payload: { bitcoinAddress }
+});
+export const fetchBitcoinAddressDetailsSuccess = payload => ({ type: FETCH_BITCOIN_ADDRESS_DETAILS_SUCCESS, payload });
+export const fetchBitcoinAddressDetailsFailure = () => ({ type: FETCH_BITCOIN_ADDRESS_DETAILS_FAILURE });
 
 // ------------------------------------
 // Selectors
@@ -46,6 +58,19 @@ export const createCustomerBitcoinAddress = ({ memo, bitcoinAddress, generateNew
 
   return addBitcoinAddress(memo, publicAddress);
 };
+
+export const fetchBitcoinAddressDetails = bitcoinAddress =>
+  dispatch => {
+    dispatch(fetchBitcoinAddressDetailsBegin(bitcoinAddress));
+    return getTransactionsForAddress(bitcoinAddress)
+      .then(response => {
+        debugger;
+        return dispatch(fetchBitcoinAddressDetailsSuccess(response.data));
+      })
+      .catch(() => {
+        return dispatch(fetchBitcoinAddressDetailsFailure());
+      });
+  };
 
 // ------------------------------------
 // Action Handlers

@@ -123,6 +123,9 @@ class DashboardPage extends Component {
     }
 
     createCustomerBitcoinAddress({ memo, generateNewAddress, bitcoinAddress });
+
+    this.props.fetchBitcoinAddressDetails(bitcoinAddress);
+
     this.setState({
       formErrors: {},
       memo: '',

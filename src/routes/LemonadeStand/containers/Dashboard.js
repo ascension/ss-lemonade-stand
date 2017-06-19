@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import DashboardPage from '../components/DashboardPage';
 import {
   createCustomerBitcoinAddress,
+  fetchBitcoinAddressDetails,
   getBitcoinAddresses,
   getCountOfBitcoinAddresses,
   getAddressesWithoutTransaction,
@@ -10,7 +11,8 @@ import {
 import { getBtcPrice } from 'store/middleware/coinPrices';
 
 const mapDispatchToProps = {
-  createCustomerBitcoinAddress
+  createCustomerBitcoinAddress,
+  fetchBitcoinAddressDetails
 };
 
 function mapStateToProps(state, props) {
